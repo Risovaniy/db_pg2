@@ -25,12 +25,11 @@ def create_db():  # создает таблицы
 
 
 def get_students(course_id):  # возвращает студентов определенного курса
-    curs.execute("SELECT * FROM student_course WHERE id_course = %s;", (course_id, ))
-    students = curs.fetchall()
-    students_on_course = []
-    for student in students:
-        print(get_student(student))
-        students_on_course += get_student(student)
+    curs.execute("""SELECT * FROM student_course sc 
+    JOIN student s ON s.id = sc.student_id
+    JOIN course c on c.id = sc.course_id WHERE sc.course_id = (%s);""", course_id)
+    students_on_course = curs.fetchall()
+    return students_on_course
 
 
 def add_students(course_id, students):  # создает студентов и
